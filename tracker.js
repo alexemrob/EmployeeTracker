@@ -39,6 +39,9 @@ function start() {
         "View Departments",
         "View Roles",
         "Update Employee Role",
+        "Delete Employee",
+        "Delete Department",
+        "Delete Role",
         "END"
       ],
       name: "choice"
@@ -67,6 +70,15 @@ function start() {
         case "Update Employee Role":
           updateRole();
           break;
+        case "Delete Employee":
+          deleteEmployee()
+          break;
+        case "Delete Department":
+          deleteDepartment()
+          break;
+        case "Delete Role":
+          deleteRole()
+          break;
         case "END":
           connection.end()
           break;
@@ -75,7 +87,7 @@ function start() {
 }
 
 //"Add Employee" / CREATE: INSERT INTO
-// Make an employee array
+// Make an employee array && follow the same for departments and roles
 
 function addEmployee() {
   console.log("Inserting an employee!");
@@ -182,6 +194,9 @@ function addRole() {
     });
 }
 
+
+//"View Employee" / READ: SELECT * FROM
+// display sql table && follow the same for departments and roles
 function viewEmployees() {
   connection.query("SELECT * FROM employee", function (err, res) {
     if (err) throw err;
@@ -206,51 +221,80 @@ function viewRoles() {
   })
 }
 
+
+//Update employee role
+//select desired employee , update role info
 function updateRole() {
-  connection.query("SELECT * FROM employee", function (err, res) {
-    if (err) throw err;
-    console.log(res)
-    var employees = [];
-    for (var i = 0; i < res.length; i++) {
-      employees.push(res[i].title)
+  inquirer.prompt([
+    {
+      message: "What is the first name of the employee whose role you wish to update?",
+      type: "input",
+      name: "name"
+    }, {
+      message: "What is the updated role id number?",
+      type: "number",
+      name: "role_id"
     }
-    connection.query("SELECT * FROM role", function (err, res) {
+  ]).then(function (response) {
+    connection.query("UPDATE employee SET role_id = ? WHERE first_name = ?", [response.role_id, response.name],
+    function (err, data) {
+      // console.table(data);
+      console.log("Role ID successfully updated.")
+      start();
+    })
+  })
+}
+
+
+//"Delete Employee" / DELETE FROM >table< WHERE >row< = ?
+// delete selected array item && follow the same for departments and roles
+function deleteEmployee() {
+  inquirer.prompt([
+    {
+      message: "What is the first name of the employee you wish to delete?",
+      type: "input",
+      name: "name"
+    }
+  ]).then(function (response) {
+  connection.query("DELETE FROM employee WHERE first_name = ?", [response.name],
+    function(err, res) {
       if (err) throw err;
-      console.log(res)
-      var roles = [];
-      for (var i = 0; i < res.length; i++) {
-        roles.push(res[i].title)
-      }
-    inquirer
-      .prompt([
-        {
-          name: "roleChange",
-          type: "list",
-          message: "What employee would you like to update?",
-          choices: employees
-        },
-        {
-          name: "updatedRole",
-          type: "list",
-          message: "What role would you like to give this employee?",
-          choices: roles
-        }
-      ])
-      .then(function (answers) {
-        console.log(answers)
-        connection.query("UPDATE role SET ? WHERE ?",
-          {
-            title: answers.updatedRoleName,
-            salary: answers.updatedRoleSalary,
-          },
-          function (err, res) {
-            if (err) throw err;
-            console.log(res.affectedRows);
+      console.log(res.affectedRows + " employee successfully deleted!\n");
+      start();
+    })
+  })
+}
 
+function deleteDepartment() {
+  inquirer.prompt([
+    {
+      message: "What is the name of the department you wish to delete?",
+      type: "input",
+      name: "name"
+    }
+  ]).then(function (response) {
+  connection.query("DELETE FROM department WHERE name = ?", [response.name],
+    function(err, res) {
+      if (err) throw err;
+      console.log(res.affectedRows + " department successfully deleted!\n");
+      start();
+    })
+  })
+}
 
-            start();
-          })
-      })
+function deleteRole() {
+  inquirer.prompt([
+    {
+      message: "What is the title of the role you wish to delete?",
+      type: "input",
+      name: "title"
+    }
+  ]).then(function (response) {
+  connection.query("DELETE FROM role WHERE title = ?", [response.title],
+    function(err, res) {
+      if (err) throw err;
+      console.log(res.affectedRows + " role successfully deleted!\n");
+      start();
     })
   })
 }
