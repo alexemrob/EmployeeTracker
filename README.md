@@ -8,8 +8,8 @@ Developers are often tasked with creating interfaces that make it easy for non-d
   <li>User may VIEW employees, departments, and roles.</li>
   <li>User may UPDATE employee roles.</li>
   <li>User may DELETE employees, departments, and roles.</li>
-</ul>
-[Click here to view walk-through video](https://drive.google.com/file/d/1tjZV6AKpygl8ulHkUQbi9jlZ84bEGGl7/view)
+</ul><br>
+<a href="https://drive.google.com/file/d/1tjZV6AKpygl8ulHkUQbi9jlZ84bEGGl7/view">Click here for a walk through video of this application.</a><br>
 
 ## Installation Instructions
 User must install inquirer, node, and MySQL.
