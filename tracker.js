@@ -115,7 +115,6 @@ function addEmployee() {
       }
     ])
     .then(function (answers) {
-      console.log(answers)
       connection.query("INSERT INTO employee SET ?",
         {
           first_name: answers.first_name,
@@ -143,7 +142,6 @@ function addDepartment() {
       }
     ])
     .then(function (answers) {
-      console.log(answers)
       connection.query("INSERT INTO department SET ?",
         {
           name: answers.name
@@ -178,7 +176,6 @@ function addRole() {
       }
     ])
     .then(function (answers) {
-      console.log(answers)
       connection.query("INSERT INTO role SET ?",
         {
           title: answers.title,
